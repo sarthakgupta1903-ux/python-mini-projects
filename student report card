@@ -1,0 +1,45 @@
+def student_report_card():
+    print("STUDENT REPORT CARD")
+    print("===================")
+    name = input("Enter student name: ")
+    roll_no = input("Enter student roll number: ")
+    print("\n")
+    n= int(input("enter no. of subjects: "))
+    subjects = []
+    marks = []
+    grade = []
+    for i in range(n):
+        subject = input("Enter subject name: ")
+        subjects.append(subject)
+        mark = int(input("Enter marks: "))
+        marks.append(mark)
+        if mark >= 90:
+            grade.append("A")
+        elif mark >= 80:
+            grade.append("B")
+        elif mark >= 70:
+            grade.append("C")
+        else:
+            grade.append("D")
+    print("\n")
+    print("Student Name:", name)
+    print("Roll No:", roll_no)
+    print("\n")
+    print("Subjects\tMarks\tGrade")
+    total=0
+    for i in range(n):
+        print(subjects[i],"\t",marks[i],"\t",grade[i])
+        total+=marks[i]
+    print("\n")
+    print("Total Marks:", total)
+    print("Percentage:", total/n)
+    if total/n >= 90:
+        print("Grade: A , Excellent Performance")
+    elif total/n >= 80:
+        print("Grade: B , Very Good Performance")
+    elif total/n >= 70:
+        print("Grade: C , Good Performance")
+    else:
+        print("Grade: D , Poor Performance")
+student_report_card()
+        
