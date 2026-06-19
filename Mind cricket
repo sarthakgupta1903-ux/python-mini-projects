@@ -1,0 +1,164 @@
+import random
+
+
+def play_innings(batting_player, target=None):
+    score = 0
+
+    while True:
+        try:
+            user_num = int(input("Enter your number (0-6): "))
+
+            if user_num < 0 or user_num > 6:
+                print("Please enter a number between 0 and 6.")
+                continue
+
+            comp_num = random.randint(0, 6)
+
+            print(f"Computer chose: {comp_num}")
+
+            # Check for wicket
+            if user_num == comp_num:
+                print(f"{batting_player} is OUT!")
+                print(f"Final score: {score}")
+                break
+
+            # Add runs for the batsman
+            if batting_player == "You":
+                score += user_num
+            else:
+                score += comp_num
+
+            print(f"Current score: {score}")
+
+            # Stop second innings when target is achieved
+            if target is not None and score >= target:
+                print(f"{batting_player} reached the target!")
+                break
+
+            print("-" * 30)
+
+        except ValueError:
+            print("Invalid input. Enter a number between 0 and 6.")
+
+    return score
+
+
+def mind_cricket():
+    print("------ WELCOME TO MIND CRICKET ------")
+    print("-------------------------------------")
+    print("Rules:")
+    print("1. Choose numbers from 0 to 6.")
+    print("2. If batsman and bowler choose the same number, batsman is OUT.")
+    print("3. The team with the higher score wins.")
+    print("4. In the second innings, the game ends as soon as the target is reached.")
+    print("-------------------------------------")
+
+    choices = ["rock", "paper", "scissor"]
+
+    # Toss
+    while True:
+        print("\nIt's time for the toss!")
+        print("Choose: rock, paper or scissor")
+
+        user_choice = input("Enter your choice: ").lower()
+
+        if user_choice not in choices:
+            print("Invalid choice. Try again.")
+            continue
+
+        comp_choice = random.choice(choices)
+
+        print(f"Computer chose: {comp_choice}")
+
+        if user_choice == comp_choice:
+            print("It's a tie. Toss again!\n")
+            continue
+
+        user_wins = (
+            (user_choice == "rock" and comp_choice == "scissor")
+            or (user_choice == "paper" and comp_choice == "rock")
+            or (user_choice == "scissor" and comp_choice == "paper")
+        )
+
+        if user_wins:
+            toss_winner = "user"
+            print("You won the toss!")
+        else:
+            toss_winner = "computer"
+            print("Computer won the toss!")
+
+        break
+
+    # Decide batting or bowling
+    if toss_winner == "user":
+        while True:
+            first_innings = input("Do you want to bat or bowl first? ").lower()
+
+            if first_innings in ["bat", "bowl"]:
+                break
+
+            print("Please enter only 'bat' or 'bowl'.")
+
+    else:
+        first_innings = random.choice(["bat", "bowl"])
+        print(f"Computer chooses to {first_innings} first.")
+
+    print("\n" + "=" * 15 + " FIRST INNINGS " + "=" * 15)
+
+    if first_innings == "bat":
+        print("You are batting first.\n")
+
+        user_score = play_innings("You")
+
+        target = user_score + 1
+
+        print(f"\nTarget for Computer: {target}")
+
+        print("\n" + "=" * 15 + " SECOND INNINGS " + "=" * 15)
+        print("Computer is batting.\n")
+
+        comp_score = play_innings("Computer", target)
+
+    else:
+        print("Computer is batting first.\n")
+
+        comp_score = play_innings("Computer")
+
+        target = comp_score + 1
+
+        print(f"\nTarget for You: {target}")
+
+        print("\n" + "=" * 15 + " SECOND INNINGS " + "=" * 15)
+        print("You are batting.\n")
+
+        user_score = play_innings("You", target)
+
+    # Match result
+    print("\n" + "=" * 15 + " RESULT " + "=" * 15)
+    print(f"Your score: {user_score}")
+    print(f"Computer score: {comp_score}")
+
+    if user_score > comp_score:
+        print("🎉 Congratulations! You won the match!")
+    elif comp_score > user_score:
+        print("🤖 Computer won the match!")
+    else:
+        print("🤝 Match tied!")
+
+
+while True:
+    mind_cricket()
+
+    while True:
+        choice = input("\nDo you want to play again? (yes/no): ").lower().strip()
+
+        if choice in ["yes", "y"]:
+            print("\nStarting a new match...\n")
+            break
+
+        elif choice in ["no", "n", "exit"]:
+            print("\nThanks for playing Mind Cricket! Goodbye.")
+            exit()
+
+        else:
+            print("Please enter 'yes' or 'no'.")
