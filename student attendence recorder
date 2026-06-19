@@ -1,0 +1,342 @@
+# ==============================
+# Student Attendance Manager
+# Basic Python Version
+# ==============================
+
+student_record = {}
+attendance_record = {}
+
+
+# ==============================
+# Student Functions
+# ==============================
+
+def add_student():
+    try:
+        student_id = int(input("Enter student ID: "))
+
+        if student_id in student_record:
+            print("Student already exists.")
+            return
+
+        name = input("Enter student name: ").strip()
+
+        if name == "":
+            print("Name cannot be empty.")
+            return
+
+        student_record[student_id] = name
+        print("Student added successfully.")
+
+    except ValueError:
+        print("Invalid input. Student ID must be a number.")
+
+
+def view_student():
+    print("\nChoose an option:")
+    print("1. View all students")
+    print("2. View student by ID")
+    print("3. View student by name")
+
+    try:
+        choice = int(input("Enter your choice: "))
+
+        if choice == 1:
+            if not student_record:
+                print("No students found.")
+            else:
+                print("\nStudent Records")
+                print("-" * 30)
+
+                for student_id, name in student_record.items():
+                    print(f"ID: {student_id} | Name: {name}")
+
+        elif choice == 2:
+            student_id = int(input("Enter student ID: "))
+
+            if student_id in student_record:
+                print(
+                    f"Student ID: {student_id} | Name: {student_record[student_id]}"
+                )
+            else:
+                print("Student not found.")
+
+        elif choice == 3:
+            name = input("Enter student name: ").strip().lower()
+
+            found = False
+
+            for student_id, student_name in student_record.items():
+                if student_name.lower() == name:
+                    print(f"Student ID: {student_id} | Name: {student_name}")
+                    found = True
+
+            if not found:
+                print("Student not found.")
+
+        else:
+            print("Invalid choice.")
+
+    except ValueError:
+        print("Invalid input.")
+
+
+# ==============================
+# Attendance Functions
+# ==============================
+
+def mark_attendance():
+    if not student_record:
+        print("No students available. Add students first.")
+        return
+
+    try:
+        student_id = int(input("Enter student ID: "))
+
+        if student_id not in student_record:
+            print("Student not found.")
+            return
+
+        date = input("Enter date (DD/MM/YYYY): ").strip()
+
+        status = input("Enter attendance (P/A): ").strip().upper()
+
+        if status not in ["P", "A"]:
+            print("Invalid attendance. Use P or A only.")
+            return
+
+        if date not in attendance_record:
+            attendance_record[date] = {}
+
+        attendance_record[date][student_id] = status
+
+        print("Attendance marked successfully.")
+
+    except ValueError:
+        print("Invalid input.")
+
+
+def view_attendance():
+    print("\nChoose an option:")
+    print("1. View all attendance")
+    print("2. View attendance by student ID")
+    print("3. View attendance by date")
+
+    try:
+        choice = int(input("Enter your choice: "))
+
+        if choice == 1:
+            if not attendance_record:
+                print("No attendance records found.")
+                return
+
+            print("\nAttendance Records")
+            print("-" * 50)
+
+            for date, records in attendance_record.items():
+                print(f"\nDate: {date}")
+
+                for student_id, status in records.items():
+                    status_text = "Present" if status == "P" else "Absent"
+
+                    print(
+                        f"ID: {student_id} | "
+                        f"Name: {student_record.get(student_id, 'Unknown')} | "
+                        f"Status: {status_text}"
+                    )
+
+        elif choice == 2:
+            student_id = int(input("Enter student ID: "))
+
+            found = False
+
+            for date, records in attendance_record.items():
+                if student_id in records:
+                    status_text = (
+                        "Present"
+                        if records[student_id] == "P"
+                        else "Absent"
+                    )
+
+                    print(
+                        f"Date: {date} | "
+                        f"Name: {student_record.get(student_id, 'Unknown')} | "
+                        f"Status: {status_text}"
+                    )
+
+                    found = True
+
+            if not found:
+                print("No attendance records found.")
+
+        elif choice == 3:
+            date = input("Enter date (DD/MM/YYYY): ").strip()
+
+            if date not in attendance_record:
+                print("No attendance records found for this date.")
+                return
+
+            print(f"\nAttendance for {date}")
+            print("-" * 40)
+
+            for student_id, status in attendance_record[date].items():
+                status_text = "Present" if status == "P" else "Absent"
+
+                print(
+                    f"ID: {student_id} | "
+                    f"Name: {student_record.get(student_id, 'Unknown')} | "
+                    f"Status: {status_text}"
+                )
+
+        else:
+            print("Invalid choice.")
+
+    except ValueError:
+        print("Invalid input.")
+
+
+def calculate_attendance_percentage():
+    try:
+        student_id = int(input("Enter student ID: "))
+
+        if student_id not in student_record:
+            print("Student not found.")
+            return
+
+        present = 0
+        total = 0
+
+        for records in attendance_record.values():
+            if student_id in records:
+                total += 1
+
+                if records[student_id] == "P":
+                    present += 1
+
+        if total == 0:
+            print("No attendance records found.")
+            return
+
+        percentage = (present / total) * 100
+
+        print(f"\nStudent: {student_record[student_id]}")
+        print(f"Total Classes: {total}")
+        print(f"Present: {present}")
+        print(f"Attendance Percentage: {percentage:.2f}%")
+
+    except ValueError:
+        print("Invalid input.")
+
+
+# ==============================
+# File Handling Functions
+# ==============================
+
+def save_students():
+    with open("student_record.txt", "w") as file:
+        for student_id, name in student_record.items():
+            file.write(f"{student_id},{name}\n")
+
+
+def save_attendance():
+    with open("attendance_record.txt", "w") as file:
+        for date, records in attendance_record.items():
+            for student_id, status in records.items():
+                file.write(f"{date},{student_id},{status}\n")
+
+
+def save_overall_percentage():
+    present = 0
+    absent = 0
+
+    for records in attendance_record.values():
+        for status in records.values():
+            if status == "P":
+                present += 1
+            elif status == "A":
+                absent += 1
+
+    total = present + absent
+
+    with open("overall_attendance_percentage.txt", "w") as file:
+        if total == 0:
+            file.write("No attendance records found.")
+        else:
+            percentage = (present / total) * 100
+            file.write(
+                f"Overall attendance percentage: {percentage:.2f}%"
+            )
+
+
+def file_handling():
+    print("\nChoose an option:")
+    print("1. Save student records")
+    print("2. Save attendance records")
+    print("3. Save overall attendance percentage")
+
+    try:
+        choice = int(input("Enter your choice: "))
+
+        if choice == 1:
+            save_students()
+            print("Student records saved successfully.")
+
+        elif choice == 2:
+            save_attendance()
+            print("Attendance records saved successfully.")
+
+        elif choice == 3:
+            save_overall_percentage()
+            print("Overall attendance percentage saved successfully.")
+
+        else:
+            print("Invalid choice.")
+
+    except ValueError:
+        print("Invalid input.")
+
+
+# ==============================
+# Main Program
+# ==============================
+
+while True:
+    print("\n===== Student Attendance Manager =====")
+    print("1. Add student")
+    print("2. View students")
+    print("3. Mark attendance")
+    print("4. View attendance")
+    print("5. Calculate attendance percentage")
+    print("6. Save data")
+    print("7. Exit")
+
+    try:
+        choice = int(input("Enter your choice: "))
+
+        if choice == 1:
+            add_student()
+
+        elif choice == 2:
+            view_student()
+
+        elif choice == 3:
+            mark_attendance()
+
+        elif choice == 4:
+            view_attendance()
+
+        elif choice == 5:
+            calculate_attendance_percentage()
+
+        elif choice == 6:
+            file_handling()
+
+        elif choice == 7:
+            print("Thank you for using Student Attendance Manager.")
+            break
+
+        else:
+            print("Invalid choice.")
+
+    except ValueError:
+        print("Please enter a valid number.")
