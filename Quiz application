@@ -1,0 +1,107 @@
+quiz_set = {}
+
+
+def add_question(quiz_set):
+    try:
+        n = int(input("Enter the number of questions: "))
+
+        if n <= 0:
+            print("Please enter a positive number.")
+            return
+
+    except ValueError:
+        print("Please enter a valid number.")
+        return
+
+    for i in range(n):
+        print(f"\nQuestion {i + 1}")
+
+        question = input("Enter the question: ")
+
+        option1 = input("Enter option 1: ")
+        option2 = input("Enter option 2: ")
+        option3 = input("Enter option 3: ")
+        option4 = input("Enter option 4: ")
+
+        while True:
+            try:
+                answer = int(input("Enter the correct option number (1-4): "))
+
+                if 1 <= answer <= 4:
+                    break
+
+                print("Please enter a number between 1 and 4.")
+
+            except ValueError:
+                print("Please enter a valid number.")
+
+        quiz_set[question] = [option1, option2, option3, option4, answer]
+
+
+def quiz(quiz_set):
+    if len(quiz_set) == 0:
+        print("No questions available. Please add questions first.")
+        return
+
+    print("\nWelcome to the Quiz!")
+    print("Total questions:", len(quiz_set))
+    print("-------------------------------")
+
+    score = 0
+
+    for question, options in quiz_set.items():
+        print("\n" + question)
+        print("1.", options[0])
+        print("2.", options[1])
+        print("3.", options[2])
+        print("4.", options[3])
+
+        while True:
+            try:
+                user_answer = int(input("Enter your answer (1-4): "))
+
+                if 1 <= user_answer <= 4:
+                    break
+
+                print("Please enter a number between 1 and 4.")
+
+            except ValueError:
+                print("Please enter a valid number.")
+
+        if user_answer == options[4]:
+            score += 1
+            print("Correct!")
+
+        else:
+            print("Wrong!")
+            print(f"The correct answer was option {options[4]}.")
+
+    print("\n-------------------------------")
+    print(f"Your score: {score}/{len(quiz_set)}")
+    print("-------------------------------")
+
+
+while True:
+    print("\nWelcome to the Quiz Application")
+    print("1. Add Question")
+    print("2. Start Quiz")
+    print("3. Exit")
+
+    try:
+        choice = int(input("Enter your choice: "))
+
+        if choice == 1:
+            add_question(quiz_set)
+
+        elif choice == 2:
+            quiz(quiz_set)
+
+        elif choice == 3:
+            print("Thank you for using the Quiz Application!")
+            break
+
+        else:
+            print("Please enter a number between 1 and 3.")
+
+    except ValueError:
+        print("Please enter a valid number.")
