@@ -1,0 +1,64 @@
+# To-Do List Manager
+tasks=[]
+
+def view_tasks():
+  print("-----------------")
+  print("Your To-Do-List: ")
+  print("-----------------")
+  if len(tasks)==0:
+    print("No tasks found!")
+  else:
+    for i in range(len(tasks)):
+      print(f"{i+1}. {tasks[i]}")
+  pass
+
+def add_task():
+  task=input("Enter the task: ")
+  tasks.append(task)
+  print("Task added successfully!")
+  return tasks
+def mark_task():
+  for i in range(len(tasks)):
+    print(f"{i+1}. {tasks[i]}")
+  n=int(input("enter the task you want to mark: "))
+  if n-1<=len(tasks):
+    tasks[n-1]="✓ "+tasks[n-1]
+    print("Task marked successfully!")
+  else:
+    print("Invalid input!")
+  pass
+
+def delete_task():
+  print("-----------------")
+  print("this is the list of tasks: ")
+  view_tasks()
+  n=int(input("enter the task you want to delete: "))
+  if n-1<=len(tasks):
+    tasks.pop(n-1)
+    print("Task deleted successfully!")
+  else:
+    print("Invalid input!")
+  pass
+while True:
+  print("--------------------")
+  print("welcome to To-Do-List Manager")
+  print("--------------------")
+  print("1. Add Task")
+  print("2. View Tasks")
+  print("3. Delete Task")
+  print("4. Mark Task")
+  print("5. Exit")
+  choice=input("Enter your choice: ")
+  if choice=="1":
+    add_task()
+  elif choice=="2":
+    view_tasks()
+  elif choice=="3":
+    delete_task()
+  elif choice=="4":
+    mark_task()
+  elif choice=="5":
+    print("Thank you for using To-Do-List Manager")
+    break
+  else:
+    print("Invalid input!")
